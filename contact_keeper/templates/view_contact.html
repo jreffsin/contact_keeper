@@ -1,0 +1,123 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div class="shadow p-4 pb-5 mb-5 rounded container border mt-3 bg-white contact-card-container">
+    <!-- Display contact data -->
+    <h3 class="fixed-h3">
+        <i class="fa-solid fa-user me-1 ms-1"></i>
+        {{ contact.first_name }} 
+        {% if contact.middle_name %}
+            {{ contact.middle_name }} 
+        {% endif %}
+        {{ contact.last_name }}</h3>
+        <a class="ms-4" href="{{ url_for('edit_contact', contact_id=contact.id) }}">Edit</a>
+        <a class="ms-1" data-bs-toggle="modal" data-bs-target="#deleteContactModal">Delete</a>
+    <div class="ps-0">
+        <div class="my-2 ms-2">
+            {% if contact.email %}
+            <p class="d-inline"><i class="fa-regular fa-envelope me-1"></i></p>
+            <p class="d-inline ms-1">{{ contact.email }}</p>
+            {% endif %}
+        </div>
+        <div class="ms-2">
+            {% if contact.phone %}
+            <p class="d-inline"><i class="fa-solid fa-phone me-1"></i></p>
+            <p class="d-inline ms-1">{{ contact.phone }}</p>
+            {% endif %}
+        </div>
+    </div>
+    <hr>
+    <!-- Display address data -->
+    <div class="ps-1">
+        <h5>
+            <i class="fa-solid fa-house me-1"></i>
+            Addresses
+        </h5>
+        <a type="button" class="btn btn-outline-primary mt-2 mb-3 btn-sm" href="{{ url_for('add_address', contact_id=contact.id) }}">+ Add Address</a>
+        <div class="cards-container">
+          <!-- Handle no addresses associated with contact -->
+          {% if not contact.addresses %}
+            <p class="null-address">
+              <i class="fa-solid fa-circle-info"></i>
+              No addresses found
+            </p>
+          {% endif %}
+          {% for address in contact.addresses %}
+          <div class="card shadow-custom card-fixed-width">
+            <!-- Handle primary address styling -->
+            {% if address.is_primary %}
+            <div>
+              <i class="fa-regular fa-star ms-3 mt-3"></i>
+              <p style="display: inline-block;">Primary Address</p>
+            </div>
+            {% else %}
+            <div class="vis-hidden">
+              <i class="fa-regular fa-star ms-3 mt-3"></i>
+              <p style="display: inline-block;">Primary Address</p>
+            </div>
+            {% endif %}
+            <div class="card-body pb-0 ms-3">
+              <div class="fs-5">
+                  {{ address.street_1 }}
+              </div>
+              {% if address.street_2 %}
+                  {{ address.street_2 }}<br>
+              {% endif %} 
+              {{ address.city }}, {{ address.state }}<br> 
+              {{ address.zip }}
+              {% if not address.street_2 %}
+                <div class="vis-hidden">Space</div>
+              {% endif %} 
+            <div class="container mt-4 ps-0 d-flex flex-row justify-content-end">
+              <form action="{{ url_for('edit_address', address_id=address.id) }}" method="GET">
+                <input class="btn btn-outline-secondary mb-3 btn-sm" type="submit" value="Edit">
+              </form>
+              <a class="btn btn-outline-danger ms-1 mb-3 btn-sm" data-bs-toggle="modal" data-bs-target="#deleteAddressModal" data-address-id="{{ address.id }}">Delete</a>
+            </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+    </div>
+</div>
+<!-- Modal - Delete contact -->
+<div class="modal fade" id="deleteContactModal" tabindex="-1" aria-labelledby="deleteContactModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteContactModalLabel">Delete Contact?</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <form action="{{ url_for('delete_contact', contact_id=contact.id) }}" method="POST">
+            <input class="btn btn-danger" type="submit" value="Delete">
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- Modal - Delete address -->
+<div class="modal fade" id="deleteAddressModal" tabindex="-1" aria-labelledby="deleteAddressModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteAddressModalLabel">Delete Address?</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-danger" id="confirmDelete" data-address-id="">Delete</button>
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- Modal handling -->
+<div id="page_id" data-page="view_contact" style="display: none;"></div>
+<script>
+    // Define modal route using jinja prior to executing modal js code
+    var deleteUrlTemplate = "{{ url_for('delete_address', address_id=0) }}";
+</script>
+<script src="{{ url_for('static', filename='modals.js') }}"></script>
+
+{% endblock content %}

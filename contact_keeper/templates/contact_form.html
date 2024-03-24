@@ -1,0 +1,85 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="shadow p-3 mb-5 bg-white rounded border mt-3 col-md-8 col-lg-6 col-xl-5 col-xxl-4 justify-content-center">
+            <form method="POST" action="">
+                {{ form.hidden_tag() }}
+                <legend class="border-bottom mb-4 px-3">
+                    <i class="fa-solid fa-user me-2"></i>{{ legend }}
+                </legend>
+                <div class="mx-3">
+                    <fieldset class="form-group">
+                        <div class="row">
+                            <div class="form-group mb-3 col-12">
+                                {{ form.first_name.label(class="form-label") }}
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="fa-solid fa-user"></i>
+                                    </span>
+                                    {{ form.first_name(class="form-control") }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group mb-3 col-12">
+                                {{ form.middle_name.label(class="form-label") }}
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="fa-solid fa-user"></i>
+                                    </span>
+                                    {{ form.middle_name(class="form-control") }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group mb-3 col-12">
+                                {{ form.last_name.label(class="form-label") }}
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="fa-solid fa-user"></i>
+                                    </span>
+                                    {{ form.last_name(class="form-control") }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group mb-3 col-12">
+                                {{ form.email.label(class="form-label") }}
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="fa-regular fa-envelope"></i>
+                                    </span>
+                                    {{ form.email(class="form-control", 
+                                    type="email") }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group mb-3 col-6 col-md-7">
+                                {{ form.phone.label(class="form-label") }}
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="fa-solid fa-phone"></i>
+                                    </span>
+                                    {{ form.phone(class="form-control", 
+                                        id="phone_number", 
+                                        onkeydown="phoneNumberFormatter()", 
+                                        pattern="\(\d{3}\) \d{3}-\d{4}", 
+                                        title="(555) 555-5555") }}
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <div class="form-group mt-2">
+                        <a class="btn btn-outline-secondary me-1" href="{{ url_for(cancel_target, contact_id=contact_id) }}">Cancel</a>
+                        {{ form.submit(class="btn btn-outline-primary") }}
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
